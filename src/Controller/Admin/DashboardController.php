@@ -2,7 +2,12 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Category;
 use App\Entity\Competicion;
+use App\Entity\Usuario;
+use App\Repository\CategoryRepository;
+use App\Repository\CompeticionRepository;
+use App\Repository\UsuarioRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -13,10 +18,33 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class DashboardController extends AbstractDashboardController
 {
+    private UsuarioRepository $usuarioRepo;
+    private CompeticionRepository $competicionRepo;
+    private CategoryRepository $categoryRepo;
+
+    // Inyectamos los repositorios en el constructor
+    public function __construct(
+        UsuarioRepository $usuarioRepo,
+        CompeticionRepository $competicionRepo,
+        CategoryRepository $categoryRepo
+    ) {
+        $this->usuarioRepo = $usuarioRepo;
+        $this->competicionRepo = $competicionRepo;
+        $this->categoryRepo = $categoryRepo;
+    }
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
-        return $this->render('admin/homeAdmin.html.twig');
+        // Obtenemos los conteos totales
+        $stats = [
+            'total_usuarios' => $this->usuarioRepo->count([]),
+            'total_competiciones' => $this->competicionRepo->count([]),
+            'total_categorias' => $this->categoryRepo->count([]),
+        ];
+
+        return $this->render('admin/homeAdmin.html.twig', [
+            'stats' => $stats,
+        ]);
 
         // Option 1. You can make your dashboard redirect to some common page of your backend
         //
@@ -53,7 +81,10 @@ class DashboardController extends AbstractDashboardController
 
         // Cambiamos linkToCrud por linkToRoute
         // IMPORTANTE: Asegúrate de que el tercer parámetro sea EXACTAMENTE el name del Route anterior
+        yield MenuItem::linkToCrud('Usuarios', 'fa fa-user', Usuario::class);
         yield MenuItem::linkToRoute('Cargar Datos API', 'fa fa-cloud-download', 'app_cargar_datos_api');
         yield MenuItem::linkToCrud('Competiciones', 'fa fa-trophy', Competicion::class);
+        yield MenuItem::linkToCrud('Categorías', 'fa fa-tags', Category::class);
     }
+
 }

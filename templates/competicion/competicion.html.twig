@@ -1,21 +1,52 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CompeticionController!{% endblock %}
+{% block title %}{{ controller_name }}{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="container py-4">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="fw-bold">{{ controller_name }}</h1>
+                <p class="text-muted">Selecciona una competición para ver sus detalles o valorarla.</p>
+                <hr>
+            </div>
+        </div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+            {% for c in competiciones %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0 text-center p-3">
+                        <div class="d-flex align-items-center justify-content-center" style="height: 120px;">
+                            {% if c.emblem %}
+                                <img src="{{ c.emblem }}" alt="Logo {{ c.name }}" style="max-height: 100px; max-width: 100%; object-fit: contain;">
+                            {% else %}
+                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                    <span class="text-muted small">Sin Logo</span>
+                                </div>
+                            {% endif %}
+                        </div>
 
-    {% for c in competiciones %}
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold" style="font-size: 1.1rem;">{{ c.name }}</h5>
+                            <span class="badge bg-primary mb-2">{{ c.type }}</span>
+                        </div>
 
-        <p>{{ c.name }} - {{ c.type }} - {{ c.emblem }}</p>
+                        <div class="card-footer bg-transparent border-0">
+                            <a href="#" class="btn btn-outline-dark btn-sm w-100">Ver Rankings</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12 text-center py-5">
+                    <div class="alert alert-warning">No se han encontrado competiciones en esta categoría.</div>
+                </div>
+            {% endfor %}
+        </div>
 
-    {% endfor %}
-
-</div>
+        <div class="mt-5">
+            <a href="{{ path('app_categories_index') }}" class="btn btn-secondary">
+                Volver a Categorías
+            </a>
+        </div>
+    </div>
 {% endblock %}
