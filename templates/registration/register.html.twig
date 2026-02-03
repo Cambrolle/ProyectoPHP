@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Registro - La Casa del Fútbol{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1>Registrarse</h1>
+
+        {{ form_start(registrationForm) }}
+        <div class="mb-3">
+            {{ form_row(registrationForm.username) }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(registrationForm.mail) }} {# Ahora saldrá en su sitio #}
+        </div>
+        <div class="mb-3">
+            {{ form_row(registrationForm.plainPassword, { label: 'Password' }) }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(registrationForm.agreeTerms, { label: 'Acepto los términos' }) }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Registrarme</button>
+        {{ form_end(registrationForm) }}
+    </div>
+{% endblock %}

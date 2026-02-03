@@ -5,11 +5,8 @@ namespace App\Entity;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\InverseJoinColumn;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\JoinTable;
-use Doctrine\ORM\Mapping\ManyToMany;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ORM\Table(name: 'category', schema: 'competiciones')]
@@ -20,26 +17,31 @@ class Category
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 100)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 900)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $image = null;
 
     /**
      * @var Collection<int, Competicion>
      */
-
-    #[JoinTable(name: 'users_groups')]
-    #[JoinColumn(name: 'user_id', referencedColumnName: 'id')]
-    #[InverseJoinColumn(name: 'group_id', referencedColumnName: 'id')]
-    #[ManyToMany(targetEntity: Group::class)]
-    #[ORM\ManyToMany(targetEntity: Competicion::class)]
+    #[ORM\ManyToMany(targetEntity: Competicion::class, inversedBy: 'categories')]
+    #[ORM\JoinTable(name: 'competiciones.category_competicion')] // Especificamos nombre y esquema
+    #[ORM\JoinColumn(name: 'id_category', referencedColumnName: 'id')] // Tu id_category
+    #[ORM\InverseJoinColumn(name: 'id_competicion', referencedColumnName: 'id')] // Tu id_competicion
     private Collection $competiciones;
+
+    /**
+     * @var Collection<int, Ranking>
+     */
+    #[ORM\OneToMany(targetEntity: Ranking::class, mappedBy: 'category')]
+    private Collection $rankings;
 
     public function __construct()
     {
         $this->competiciones = new ArrayCollection();
+        $this->rankings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -91,6 +93,36 @@ class Category
     public function removeCompeticione(Competicion $competicione): static
     {
         $this->competiciones->removeElement($competicione);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ranking>
+     */
+    public function getRankings(): Collection
+    {
+        return $this->rankings;
+    }
+
+    public function addRanking(Ranking $ranking): static
+    {
+        if (!$this->rankings->contains($ranking)) {
+            $this->rankings->add($ranking);
+            $ranking->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRanking(Ranking $ranking): static
+    {
+        if ($this->rankings->removeElement($ranking)) {
+            // set the owning side to null (unless already changed)
+            if ($ranking->getCategory() === $this) {
+                $ranking->setCategory(null);
+            }
+        }
 
         return $this;
     }

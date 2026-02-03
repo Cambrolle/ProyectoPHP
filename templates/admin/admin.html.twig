@@ -1,16 +1,76 @@
-{% extends 'base.html.twig' %}
+{% extends '@EasyAdmin/page/content.html.twig' %}
 
-{% block title %}Hello AdminController!{% endblock %}
+{% block title %}Carga de Datos API{% endblock %}
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% block main %}
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .api-card {
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            background: #2c2c2c; /* Color oscuro para que pegue con tu admin */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        .api-card:hover {
+            transform: translateY(-5px);
+            border-color: #666;
+        }
+        .api-card img {
+            max-width: 90px;
+            height: 90px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+        .api-card h4 {
+            font-size: 1.1rem;
+            margin: 10px 0;
+            color: #efefef;
+            font-weight: 600;
+        }
+        .api-badge {
+            background: #38bdf8;
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .header-section {
+            margin-bottom: 20px;
+            padding: 0 20px;
+        }
+    </style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <div class="header-section">
+        <h1 class="title">Carga de Datos Finalizada ✅</h1>
+        <p class="text-muted">Se han procesado <strong>{{ content.competitions|length }}</strong> competiciones disponibles en la API.</p>
+    </div>
 
-    <p>{{ content }}</p>
-</div>
+    <div class="grid-container">
+        {% for e in content.competitions %}
+            <div class="api-card">
+                {% if e.emblem %}
+                    <img src="{{ e.emblem }}" alt="Logo de {{ e.name }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/90?text=No+Logo" alt="Sin logo">
+                {% endif %}
+
+                <h4>{{ e.name }}</h4>
+                <span class="api-badge">{{ e.type }}</span>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

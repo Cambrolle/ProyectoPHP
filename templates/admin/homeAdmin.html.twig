@@ -1,0 +1,103 @@
+{# templates/admin/homeAdmin.html.twig #}
+
+{# 1. IMPORTANTE: Cambiamos base.html.twig por la plantilla de contenido de EasyAdmin #}
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block title %}Panel de Control{% endblock %}
+
+{# 2. Usamos el bloque 'content_title' para el encabezado del panel #}
+{% block content_title %}Panel de Control{% endblock %}
+
+{# 3. EasyAdmin usa el bloque 'main' para el contenido central #}
+{% block main %}
+    <style>
+        :root {
+            --card-size: 180px;
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(var(--card-size), 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .admin-card-container {
+            aspect-ratio: 1 / 1;
+        }
+
+        .admin-card {
+            height: 100%;
+            border: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: #2c3e50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 15px;
+            text-decoration: none; /* Quita subrayados */
+        }
+
+        .admin-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+            background: #34495e;
+        }
+
+        .icon-white {
+            filter: brightness(0) invert(1);
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+
+    <div class="admin-grid">
+        {# Card: Data Load #}
+        <div class="admin-card-container">
+            <a href="{{ path('app_cargar_datos_api') }}" class="admin-card shadow-sm">
+                <img src="{{ asset('images/descargar.png') }}" alt="Cargar" class="icon-white">
+                <span class="card-title">Data Load</span>
+            </a>
+        </div>
+
+        {# Card: Competiciones #}
+        <div class="admin-card-container">
+            {# Aquí puedes enlazar al CRUD directamente si quieres #}
+            <a href="{{ ea_url().setController('App\\Controller\\Admin\\CompeticionCrudController') }}" class="admin-card shadow-sm" style="background-color: #1a1a1a;">
+                <span style="font-size: 2.5rem; margin-bottom: 10px;">🏆</span>
+                <span class="card-title">Competiciones</span>
+            </a>
+        </div>
+
+        {# Card: Categorías #}
+        <div class="admin-card-container">
+            <a href="#" class="admin-card shadow-sm" style="background-color: #2980b9;">
+                <span style="font-size: 2.5rem; margin-bottom: 10px;">👥</span>
+                <span class="card-title">Categoría</span>
+            </a>
+        </div>
+
+        {# Card: Rankings #}
+        <div class="admin-card-container">
+            <a href="#" class="admin-card shadow-sm" style="background-color: #27ae60;">
+                <span style="font-size: 2.5rem; margin-bottom: 10px;">⚙️</span>
+                <span class="card-title">Rankings</span>
+            </a>
+        </div>
+    </div>
+{% endblock %}
