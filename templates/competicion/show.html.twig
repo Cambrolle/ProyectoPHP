@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ competicion.name }}{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <img src="{{ competicion.emblem }}" class="img-fluid mb-3" style="max-height: 200px;">
+                <h1 class="fw-bold">{{ competicion.name }}</h1>
+                <span class="badge bg-primary">{{ competicion.type }}</span>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card shadow-sm p-4 mb-4">
+                    {% if hasAlreadyReviewed %}
+                        <div class="alert alert-info mb-0">
+                            <i class="fa fa-info-circle"></i> Ya has enviado una valoración para esta competición. ¡Gracias por participar!
+                        </div>
+                    {% else %}
+                        <h3 class="mb-3">Deja tu valoración</h3>
+                        {{ form_start(reviewForm) }}
+                        {{ form_row(reviewForm.stars) }}
+                        {{ form_row(reviewForm.comment) }}
+                        <button class="btn btn-dark mt-3">Enviar Review</button>
+                        {{ form_end(reviewForm) }}
+                    {% endif %}
+                </div>
+
+                <h3 class="mt-5">Opiniones de otros usuarios</h3>
+                <hr>
+                {% for r in reviews %}
+                    <div class="border-bottom mb-3 pb-2">
+                        <div class="text-warning">
+                            {% for i in 1..r.stars %}★{% endfor %}
+                        </div>
+                        <strong>{{ r.usuario.username }}</strong>
+                        <p class="text-muted">{{ r.comment }}</p>
+                    </div>
+                {% else %}
+                    <p class="text-muted">Aún no hay valoraciones. ¡Sé el primero!</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

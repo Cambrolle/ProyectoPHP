@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 #[ORM\Table(name: 'review', schema: 'competiciones')]
+#[ORM\UniqueConstraint(name: 'unique_user_competicion', fields: ['usuario', 'competicion'])]
 class Review
 {
     #[ORM\Id]

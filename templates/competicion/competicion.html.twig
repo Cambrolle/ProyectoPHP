@@ -32,7 +32,11 @@
                         </div>
 
                         <div class="card-footer bg-transparent border-0">
-                            <a href="#" class="btn btn-outline-dark btn-sm w-100">Ver Rankings</a>
+                            {% if app.user %}
+                                <a href="{{ path('app_competicion_show', {id: c.id}) }}" class="btn btn-outline-dark btn-sm w-100">Valorar y Comentar</a>
+                            {% else %}
+                                <a href="{{ path('app_login') }}" class="btn btn-secondary btn-sm w-100">Loguéate para valorar</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
