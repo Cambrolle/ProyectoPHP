@@ -27,6 +27,7 @@ class ReviewType extends AbstractType
             ])
             ->add('comment', TextareaType::class, [
                 'label' => 'Tu comentario',
+                'required' => false,
                 'attr' => ['class' => 'form-control', 'rows' => 3]
             ]);
     }

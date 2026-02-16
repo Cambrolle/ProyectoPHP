@@ -15,6 +15,17 @@ class CategoryRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Category::class);
     }
+    public function findBestRatedCategories(): array
+    {
+        return $this->createQueryBuilder('cat')
+            ->select('cat as categoria, AVG(r.stars) as promedio, COUNT(r.id) as totalReviews')
+            ->join('cat.competiciones', 'comp')
+            ->join('comp.reviews', 'r')
+            ->groupBy('cat.id')
+            ->orderBy('promedio', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 
     //    /**
     //     * @return Category[] Returns an array of Category objects

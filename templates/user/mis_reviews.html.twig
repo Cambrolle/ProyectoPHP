@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mis Valoraciones{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <h1 class="mb-4 fw-bold">Mis Valoraciones</h1>
+
+        {% if reviews is empty %}
+            <div class="alert alert-info">Aún no has realizado ninguna valoración.</div>
+        {% else %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle bg-white shadow-sm rounded">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>Competición</th>
+                        <th>Estrellas</th>
+                        <th>Comentario</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for r in reviews %}
+                        <tr>
+                            <td>
+                                <img src="{{ r.competicion.emblem }}" width="30" class="me-2">
+                                <strong>{{ r.competicion.name }}</strong>
+                            </td>
+                            <td class="text-warning">
+                                {% for i in 1..r.stars %}★{% endfor %}
+                            </td>
+                            <td class="text-muted small">
+                                {{ r.comment|default('Sin comentario')|slice(0, 50) }}...
+                            </td>
+                            <td>
+                                <a href="{{ path('app_review_edit', {id: r.id}) }}" class="btn btn-sm btn-outline-primary">
+                                    Editar
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

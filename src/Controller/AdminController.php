@@ -21,6 +21,7 @@ final class AdminController extends AbstractController
         ]);
     }
 
+
     #[Route('/admin/custom/cargar-datos', name: 'app_cargar_datos_api')]
     public function data_load(HttpClientInterface $httpClient, EntityManagerInterface $entityManager): Response
     {

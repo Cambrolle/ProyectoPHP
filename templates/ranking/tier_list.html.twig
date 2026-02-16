@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rankear {{ category.name }}{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="fw-bold">Clasificar: {{ category.name }}</h1>
+            <p class="text-muted">Asigna un nivel a cada competición para generar tu ranking</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm border-0">
+                    <div class="list-group list-group-flush" id="ranking-list">
+                        {% for c in competiciones %}
+                            <div class="list-group-item d-flex align-items-center p-3">
+                                <img src="{{ c.emblem }}" alt="{{ c.name }}" class="me-3" style="width: 50px; height: 50px; object-fit: contain;">
+
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0 fw-bold">{{ c.name }}</h6>
+                                    <small class="text-muted">{{ c.type }}</small>
+                                </div>
+
+                                <div style="width: 200px;">
+                                    <select class="form-select tier-selector fw-bold" data-compid="{{ c.id }}" onchange="this.style.color = getTierColor(this.value)">
+                                        <option value="" selected>-- Sin asignar --</option>
+                                        <option value="1" style="color: #dc3545;">Tier S (Excelente)</option>
+                                        <option value="2" style="color: #ffc107;">Tier A (Buena)</option>
+                                        <option value="3" style="color: #198754;">Tier B (Normal)</option>
+                                        <option value="4" style="color: #0dcaf0;">Tier C (Baja)</option>
+                                    </select>
+                                    <script>
+                                        // Pequeño script para que el selector cambie de color al elegir
+                                        function getTierColor(val) {
+                                            const colors = { '1': '#dc3545', '2': '#ffc107', '3': '#198754', '4': '#0dcaf0' };
+                                            return colors[val] || '#212529';
+                                        }
+                                    </script>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="text-center mt-5">
+                    <button id="save-ranking" class="btn btn-primary btn-lg px-5 shadow">
+                        <i class="fa fa-save me-2"></i> Guardar mi Ranking
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        document.getElementById('save-ranking').addEventListener('click', function() {
+            const data = {};
+            let hasSelection = false;
+
+            document.querySelectorAll('.tier-selector').forEach(select => {
+                if (select.value !== "") {
+                    data[select.dataset.compid] = select.value;
+                    hasSelection = true;
+                }
+            });
+
+            if (!hasSelection) {
+                alert('Por favor, selecciona al menos un nivel para alguna competición.');
+                return;
+            }
+
+            fetch('{{ path('app_ranking_save', {id: category.id}) }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        // Recargamos para que el controlador detecte que ya existe el ranking
+                        window.location.href = '{{ path('app_category_show', {id: category.id}) }}';
+                    } else {
+                        alert('Hubo un error al guardar tu ranking.');
+                    }
+                })
+                .catch(err => console.error('Error:', err));
+        });
+    </script>
+{% endblock %}

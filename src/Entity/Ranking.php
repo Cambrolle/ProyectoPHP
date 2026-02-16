@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RankingRepository::class)]
 #[ORM\Table(name: 'ranking', schema: 'competiciones')]
+#[ORM\UniqueConstraint(name: 'unique_user_category_ranking', fields: ['usuario', 'category'])]
 class Ranking
 {
     #[ORM\Id]
@@ -25,7 +26,12 @@ class Ranking
     /**
      * @var Collection<int, RankingCompeticion>
      */
-    #[ORM\OneToMany(targetEntity: RankingCompeticion::class, mappedBy: 'ranking')]
+    #[ORM\OneToMany(
+        targetEntity: RankingCompeticion::class,
+        mappedBy: 'ranking',
+        cascade: ['remove'],
+        orphanRemoval: true
+    )]
     private Collection $rankingCompeticions;
 
     public function __construct()

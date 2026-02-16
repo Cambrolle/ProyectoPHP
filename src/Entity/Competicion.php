@@ -182,6 +182,22 @@ class Competicion
 
         return $this;
     }
+    public function getAverageStars(): float
+    {
+        $reviews = $this->getReviews();
+
+        if ($reviews->isEmpty()) {
+            return 0.0;
+        }
+
+        $total = 0;
+        foreach ($reviews as $review) {
+            $total += $review->getStars();
+        }
+
+        // Retornamos la media redondeada a 1 decimal
+        return round($total / $reviews->count(), 1);
+    }
 
 
 }

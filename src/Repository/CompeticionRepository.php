@@ -15,6 +15,36 @@ class CompeticionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Competicion::class);
     }
+    public function findByFilters(?string $search, ?string $type): array
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        if ($search) {
+            // Usamos UPPER para que busque igual "champions" que "CHAMPIONS"
+            $qb->andWhere('UPPER(c.name) LIKE UPPER(:search)')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        if ($type) {
+            $qb->andWhere('c.type = :type')
+                ->setParameter('type', $type);
+        }
+
+        return $qb->orderBy('c.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+    public function findTopRated(int $limit = 5): array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c as competicion, AVG(r.stars) as media')
+            ->join('c.reviews', 'r')
+            ->groupBy('c.id')
+            ->orderBy('media', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 
     //    /**
     //     * @return Competicion[] Returns an array of Competicion objects

@@ -5,46 +5,89 @@
 {% block body %}
     <div class="row">
         <div class="col-12 text-center py-5">
-            <h1 class="display-4 fw-bold">Bienvenido a {{ controller_name }}</h1>
+            <h1 class="display-4 fw-bold">Bienvenido a La Casa del Fútbol</h1>
             <p class="lead text-muted">Consulta y valora las mejores competiciones del mundo</p>
             <hr class="my-4" style="max-width: 200px; margin: auto; border-top: 3px solid #000;">
         </div>
     </div>
 
-    <div class="row justify-content-center">
+    <div class="row justify-content-center g-4">
         {% if app.user %}
-            {# Si el usuario está logueado, ve la tarjeta #}
-            <div class="col-md-6 col-lg-4">
+            {# TARJETA: CATEGORÍAS #}
+            <div class="col-md-6 col-lg-3">
                 <a href="{{ path('app_categories_index') }}" class="text-decoration-none text-dark">
                     <div class="card shadow-sm border-0 text-center py-5 h-100 bg-white transition-hover">
                         <div class="card-body">
-                            <div class="display-1 mb-3">🏆</div>
-                            <h2 class="fw-bold">CATEGORÍAS</h2>
-                            <p class="text-muted">Explora las ligas por categorías y regiones</p>
-                            <span class="btn btn-outline-dark mt-3">Ver todas</span>
+                            <div class="display-3 mb-3">🏆</div>
+                            <h3 class="fw-bold">CATEGORÍAS</h3>
+                            <p class="text-muted small">Explora las ligas por regiones</p>
+                            <span class="btn btn-outline-dark btn-sm mt-3">Ver todas</span>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="col-md-5 col-lg-4">
+
+            {# TARJETA: COMPETICIONES #}
+            <div class="col-md-6 col-lg-3">
                 <a href="{{ path('app_competicion') }}" class="text-decoration-none text-dark">
                     <div class="card shadow-sm border-0 text-center py-5 h-100 bg-white transition-hover" style="border-radius: 15px;">
                         <div class="card-body">
-                            <div class="display-1 mb-3">⚽</div>
-                            <h2 class="fw-bold">COMPETICIONES</h2>
-                            <p class="text-muted">Ver el listado completo</p>
-                            <span class="btn btn-outline-dark mt-3">Ver todas</span>
+                            <div class="display-3 mb-3">⚽</div>
+                            <h3 class="fw-bold">COMPETICIONES</h3>
+                            <p class="text-muted small">Ver el listado completo</p>
+                            <span class="btn btn-outline-dark btn-sm mt-3">Ver todas</span>
                         </div>
                     </div>
                 </a>
             </div>
+
+            {# TARJETA: MIS REVIEWS #}
+            <div class="col-md-6 col-lg-3">
+                <a href="{{ path('app_mis_reviews') }}" class="text-decoration-none text-dark">
+                    <div class="card shadow-sm border-0 text-center py-5 h-100 bg-white transition-hover" style="border-radius: 15px; border-top: 5px solid #0d6efd !important;">
+                        <div class="card-body">
+                            <div class="display-3 mb-3">⭐</div>
+                            <h3 class="fw-bold">MIS REVIEWS</h3>
+                            <p class="text-muted small">Edita tus valoraciones</p>
+                            <span class="btn btn-primary btn-sm mt-3">Gestionar notas</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            {# NUEVA TARJETA: ESTADÍSTICAS GLOBALES #}
+            <div class="col-md-6 col-lg-3">
+                <a href="{{ path('app_stats') }}" class="text-decoration-none text-dark">
+                    <div class="card shadow-sm border-0 text-center py-5 h-100 bg-white transition-hover" style="border-radius: 15px; border-top: 5px solid #ffc107 !important;">
+                        <div class="card-body">
+                            <div class="display-3 mb-3">📊</div>
+                            <h3 class="fw-bold">ESTADÍSTICAS</h3>
+                            <p class="text-muted small">Top 5 y datos globales</p>
+                            <span class="btn btn-warning btn-sm mt-3 fw-bold">Ver rankings</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
         {% else %}
-            {# Si NO está logueado, le mostramos un mensaje o un botón de login #}
-            <div class="col-md-8 text-center py-5"></div>
+            {# Si NO está logueado #}
+            <div class="col-md-8 text-center py-5">
+                <div class="p-5 bg-light rounded-3 shadow-sm">
+                    <h2 class="fw-bold">Únete a la comunidad</h2>
+                    <p class="text-muted">Inicia sesión para poder votar y crear tus propios rankings.</p>
+                    <a href="{{ path('app_login') }}" class="btn btn-dark btn-lg px-5 mt-3">Iniciar Sesión</a>
+                </div>
+            </div>
         {% endif %}
     </div>
 
     <style>
-        .card:hover { transform: translateY(-10px); }
+        .transition-hover {
+            transition: all 0.3s ease;
+        }
+        .transition-hover:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
     </style>
 {% endblock %}
