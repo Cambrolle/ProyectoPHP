@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Categorías - LCDF{% endblock %}
+
+{% block body %}
+    <div class="container py-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Inicio</a></li>
+                <li class="breadcrumb-item active">Categorías</li>
+            </ol>
+        </nav>
+
+        <h1 class="mb-4 fw-bold">Categorías Disponibles</h1>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for category in categories %}
+                <div class="col">
+                    <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                        {% if category.image %}
+                            <img src="{{ category.image }}" class="card-img-top" alt="{{ category.name }}" style="height: 200px; object-fit: cover;">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">{{ category.name }}</h5>
+                            <p class="card-text text-muted">{{ category.competiciones|length }} Competiciones</p>
+                            <a href="{{ path('app_category_show', {id: category.id}) }}" class="btn btn-dark w-100">Explorar</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
