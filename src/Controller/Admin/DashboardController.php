@@ -85,6 +85,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToRoute('Cargar Datos API', 'fa fa-cloud-download', 'app_cargar_datos_api');
         yield MenuItem::linkToCrud('Competiciones', 'fa fa-trophy', Competicion::class);
         yield MenuItem::linkToCrud('Categorías', 'fa fa-tags', Category::class);
+        yield MenuItem::linkToRoute('Estadísticas Globales', 'fas fa-chart-bar', 'app_stats');
     }
 
 }

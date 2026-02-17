@@ -6,12 +6,15 @@ use App\Entity\Competicion;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class AdminController extends AbstractController
 {
+
     #[Route('/admin', name: 'admin_site')]
+    #[IsGranted('ROLE_ADMIN')]
     public function index(): Response
     {
 
@@ -23,6 +26,7 @@ final class AdminController extends AbstractController
 
 
     #[Route('/admin/custom/cargar-datos', name: 'app_cargar_datos_api')]
+    #[IsGranted('ROLE_ADMIN')]
     public function data_load(HttpClientInterface $httpClient, EntityManagerInterface $entityManager): Response
     {
         $response = $httpClient->request('GET', 'http://api.football-data.org/v4/competitions/');

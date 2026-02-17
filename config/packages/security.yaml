@@ -20,11 +20,15 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            # USA BARRAS INVERTIDAS \ NO BARRAS NORMALES /
             custom_authenticator: App\Security\UserAuthenticator
             logout:
                 path: app_logout
                 # where to redirect after logout
                 # target: app_any_route
+                    # Esto asegura que si no están logueados, vayan al login
+                    # Esto asegura que si no están logueados, vayan al login
+            entry_point: App\Security\UserAuthenticator
 
             remember_me:
                 secret: '%kernel.secret%'
@@ -42,8 +46,18 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        # 1. Rutas de Administración: Solo para usuarios con el ROL de ADMIN
+        # Esto bloquea /admin, /competicion/new, /competicion/edit, etc.
+        - { path: ^/admin, roles: ROLE_ADMIN }
+
+        # 2. Rutas de Estadísticas o Crear Review: Solo para usuarios LOGUEADOS
+        # Si no están logueados, Symfony los mandará al login automáticamente.
+        - { path: ^/estadisticas, roles: ROLE_USER }
+        - { path: ^/ranking/new, roles: ROLE_USER }
+        - { path: ^/review/new, roles: ROLE_USER }
+
+        # 3. El resto de la web (index, show de competiciones) suele ser público
+        # - { path: ^/, roles: PUBLIC_ACCESS }
 
 when@test:
     security:
